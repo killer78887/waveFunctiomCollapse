@@ -1,9 +1,4 @@
-ctx.imageSmoothingEnabled = false;
-
 const totalTileType = tiles.length;
-const grid = { x: 40,y: 40};
-const totalTiles = grid.x*grid.y;
-const tileSize = Math.sqrt(canvas.height*canvas.width/totalTiles);
 
 let wave = Array.from({ length: totalTiles }, () => Array(totalTileType).fill(true));
 let clpWave = new Array(totalTiles).fill(undefined);
@@ -25,9 +20,19 @@ function reset(startOn){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     wave = Array.from({ length: totalTiles }, () => Array(totalTileType).fill(true));
     clpWave = new Array(totalTiles).fill(undefined);
+    gridState = new Array(totalTiles).fill(false);
     wave[startOn] = Array(totalTileType).fill(false,0,totalTileType);
     wave[startOn][Math.floor(Math.random()*totalTileType)] = true;
+}
+function generate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    wave = Array.from({ length: totalTiles }, () => Array(totalTileType).fill(true));
+    clpWave = new Array(totalTiles).fill(undefined);
     gridState = new Array(totalTiles).fill(false);
+    wave[0] = Array(totalTileType).fill(false,0,totalTileType);
+    wave[0][0] = true;
+    wave[totalTiles-1] = Array(totalTileType).fill(false,0,totalTileType);
+    wave[totalTiles-1][2] = true;
 }
 function collapse(){
     let entropy = totalTileType;
@@ -84,8 +89,8 @@ function collapse(){
         }
     }
 }
-wave[15] = Array(totalTileType).fill(false,0,totalTileType);
-wave[15][3] = true;
+
+ctx.imageSmoothingEnabled = false;
 
 function render(){
     //console.table(wave);
@@ -94,7 +99,7 @@ function render(){
         for (var x = 0; x < grid.x; x++) {
             let onTile = y*grid.x+x;
             if (clpWave[onTile]!==undefined & gridState[onTile]===false) {
-                ctx.putImageData(tiles[clpWave[onTile]],x*10,y*10);
+                ctx.putImageData(tiles[clpWave[onTile]],x*tileSize,y*tileSize);
                 gridState[onTile] = true;
             }
         }

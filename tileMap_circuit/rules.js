@@ -3,32 +3,55 @@ var ctx = canvas.getContext("2d");
 const offscreenCanvas = new OffscreenCanvas(1,1);
 const offscreenContext = offscreenCanvas.getContext("2d");
 
-const totalUniqueTiles = 5;
+const grid = { x: 40,y: 40};
+const totalUniqueTiles = 14;
+const totalTiles = grid.x*grid.y;
+const tileSize = Math.sqrt(canvas.height*canvas.width/totalTiles);
+
 const imgSrc = Array.from({ length: totalUniqueTiles }, () => ({ img: new Image(), side: new Array(totalUniqueTiles) }));
 let tiles = [];
 let rules = [];
 
-imgSrc[0].img.src = "/tileMap_tetris/knots/corner.png";
-imgSrc[1].img.src = "/tileMap_tetris/knots/cross.png";
-imgSrc[2].img.src = "/tileMap_tetris/knots/empty.png";
-imgSrc[3].img.src = "/tileMap_tetris/knots/line.png";
-imgSrc[4].img.src = "/tileMap_tetris/knots/t.png";
+imgSrc[0].img.src = "/tileMap_circuit/socket/bridge.png";
+imgSrc[1].img.src = "/tileMap_circuit/socket/component.png";
+imgSrc[2].img.src = "/tileMap_circuit/socket/connection.png";
+imgSrc[3].img.src = "/tileMap_circuit/socket/corner.png";
+imgSrc[4].img.src = "/tileMap_circuit/socket/dskew.png";
+imgSrc[5].img.src = "/tileMap_circuit/socket/skew.png";
+imgSrc[6].img.src = "/tileMap_circuit/socket/substrate.png";
+imgSrc[7].img.src = "/tileMap_circuit/socket/t.png";
+imgSrc[8].img.src = "/tileMap_circuit/socket/track.png";
+imgSrc[9].img.src = "/tileMap_circuit/socket/transition.png";
+imgSrc[10].img.src = "/tileMap_circuit/socket/turn.png";
+imgSrc[11].img.src = "/tileMap_circuit/socket/viad.png";
+imgSrc[12].img.src = "/tileMap_circuit/socket/vias.png";
+imgSrc[13].img.src = "/tileMap_circuit/socket/wire.png";
 imgSrc[0].side = ['aba', 'aba', 'aaa', 'aaa'];
 imgSrc[1].side = ['aba', 'aba', 'aba', 'aba'];
 imgSrc[2].side = ['aaa', 'aaa', 'aaa', 'aaa'];
 imgSrc[3].side = ['aaa', 'aba', 'aaa', 'aba'];
 imgSrc[4].side = ['aaa', 'aba', 'aba', 'aba'];
-
+imgSrc[5].side = ['aba', 'aba', 'aba', 'aba'];
+imgSrc[6].side = ['aaa', 'aaa', 'aaa', 'aaa'];
+imgSrc[7].side = ['aaa', 'aba', 'aaa', 'aba'];
+imgSrc[8].side = ['aaa', 'aba', 'aba', 'aba'];
+imgSrc[9].side = ['aba', 'aba', 'aba', 'aba'];
+imgSrc[10].side = ['aaa', 'aaa', 'aaa', 'aaa'];
+imgSrc[11].side = ['aaa', 'aba', 'aaa', 'aba'];
+imgSrc[12].side = ['aaa', 'aba', 'aba', 'aba'];
+imgSrc[13].side = ['aaa', 'aba', 'aba', 'aba'];
 // Promisify the canvImg function
 function canvImg(file, toRotate, angle) {
     return new Promise(resolve => {
         createImageBitmap(file).then(imageBitmap => {
-            offscreenCanvas.width = imageBitmap.width;
-            offscreenCanvas.height = imageBitmap.height;
+            const scale = tileSize/imageBitmap.width;
+            offscreenCanvas.width = imageBitmap.width*scale;
+            offscreenCanvas.height = imageBitmap.height*scale;
 
             // Rotate the image
-            offscreenContext.translate(imageBitmap.width / 2, imageBitmap.height / 2);
+            offscreenContext.translate(imageBitmap.width*scale / 2, imageBitmap.height*scale / 2);
             offscreenContext.rotate(angle * (Math.PI / 180));
+            offscreenContext.scale(scale,scale)
             offscreenContext.drawImage(imageBitmap, -imageBitmap.width / 2, -imageBitmap.height / 2);
 
             // Extract pixel data
@@ -65,11 +88,11 @@ async function initializeTiles() {
         }
     }
 }
-
+ctx.imageSmoothingEnabled = false;
 function draw() {
     for (var i = 0; i < tiles.length; i++) {
         let toDraw = tiles[i];
-        ctx.putImageData(toDraw, i * 10, 0);
+        ctx.putImageData(toDraw, i * 20, 30);
         console.log("drawing");
     }
 }
