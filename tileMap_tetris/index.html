@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/tileMap_tetris/style.css">
+</head>
+
+<body>
+    <img src="/tileMap_tetris/knots/corner.png" width="50" height="50" id="tile0">
+    <img src="/tileMap_tetris/knots/cross.png" width="50" height="50" id="tile1">
+    <img src="/tileMap_tetris/knots/empty.png" width="50" height="50" id="tile2">
+    <img src="/tileMap_tetris/knots/line.png" width="50" height="50" id="tile3">
+    <img src="/tileMap_tetris/knots/t.png" width="50" height="50" id="tile4">
+    <input type="button" value="update" onclick="draw()">
+    <input type="button" value="reset" onclick="reset(0)">
+    <canvas width="1" height="1" id="ofCanvas"></canvas<br>
+    <canvas width="400" height="400" id="myCanvas"></canvas>
+    <script src="/tileMap_tetris/test.js"></script>
+    <script defer src="/tileMap_tetris/main.js"></script>
+</body>
+</html>
