@@ -3,6 +3,7 @@ var ctx = canvas.getContext("2d");
 const offscreenCanvas = new OffscreenCanvas(1,1);
 const offscreenContext = offscreenCanvas.getContext("2d");
 
+offscreenContext.imageSmoothingEnabled = false;
 const grid = { x: 40,y: 40};
 const totalUniqueTiles = 14;
 const totalTiles = grid.x*grid.y;
@@ -26,20 +27,20 @@ imgSrc[10].img.src = "/tileMap_circuit/socket/turn.png";
 imgSrc[11].img.src = "/tileMap_circuit/socket/viad.png";
 imgSrc[12].img.src = "/tileMap_circuit/socket/vias.png";
 imgSrc[13].img.src = "/tileMap_circuit/socket/wire.png";
-imgSrc[0].side = ['aba', 'aba', 'aaa', 'aaa'];
-imgSrc[1].side = ['aba', 'aba', 'aba', 'aba'];
-imgSrc[2].side = ['aaa', 'aaa', 'aaa', 'aaa'];
-imgSrc[3].side = ['aaa', 'aba', 'aaa', 'aba'];
-imgSrc[4].side = ['aaa', 'aba', 'aba', 'aba'];
-imgSrc[5].side = ['aba', 'aba', 'aba', 'aba'];
-imgSrc[6].side = ['aaa', 'aaa', 'aaa', 'aaa'];
-imgSrc[7].side = ['aaa', 'aba', 'aaa', 'aba'];
-imgSrc[8].side = ['aaa', 'aba', 'aba', 'aba'];
-imgSrc[9].side = ['aba', 'aba', 'aba', 'aba'];
-imgSrc[10].side = ['aaa', 'aaa', 'aaa', 'aaa'];
-imgSrc[11].side = ['aaa', 'aba', 'aaa', 'aba'];
-imgSrc[12].side = ['aaa', 'aba', 'aba', 'aba'];
-imgSrc[13].side = ['aaa', 'aba', 'aba', 'aba'];
+imgSrc[0].side = ['dld', 'dgd', 'dld', 'dgd'];
+imgSrc[1].side = ['bbb', 'bbb', 'bbb', 'bbb'];
+imgSrc[2].side = ['dld', 'ddb', 'bbb', 'bdd'];
+imgSrc[3].side = ['ddd', 'ddd', 'ddb', 'bdd']; 
+imgSrc[4].side = ['dld', 'dld', 'dld', 'dld'];//doubt
+imgSrc[5].side = ['dld', 'dld', 'ddd', 'ddd'];
+imgSrc[6].side = ['ddd', 'ddd', 'ddd', 'ddd'];
+imgSrc[7].side = ['ddd', 'dld', 'dld', 'dld'];
+imgSrc[8].side = ['dld', 'ddd', 'dld', 'ddd'];
+imgSrc[9].side = ['dgd', 'ddd', 'dld', 'ddd'];
+imgSrc[10].side = ['dld', 'dld', 'ddd', 'ddd'];
+imgSrc[11].side = ['ddd', 'dld', 'ddd', 'dld'];
+imgSrc[12].side = ['dld', 'ddd', 'ddd', 'ddd'];
+imgSrc[13].side = ['ddd', 'dgd', 'ddd', 'dgd'];
 // Promisify the canvImg function
 function canvImg(file, toRotate, angle) {
     return new Promise(resolve => {
@@ -88,7 +89,7 @@ async function initializeTiles() {
         }
     }
 }
-ctx.imageSmoothingEnabled = false;
+
 function draw() {
     for (var i = 0; i < tiles.length; i++) {
         let toDraw = tiles[i];
@@ -97,3 +98,18 @@ function draw() {
     }
 }
 initializeTiles()
+
+
+function downloadCanvasAsImage(fileName) {
+    console.log("downloading");
+    const dataUrl = canvas.toDataURL('image/png');
+  
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = fileName;
+  
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+

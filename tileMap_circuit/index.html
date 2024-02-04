@@ -22,9 +22,10 @@
     <img src="/tileMap_circuit/socket/viad.png" width="50" height="50">
     <img src="/tileMap_circuit/socket/vias.png" width="50" height="50">
     <img src="/tileMap_circuit/socket/wire.png" width="50" height="50">
-    <input type="button" value="update" onclick="generate()">
-    <input type="button" value="reset" onclick="reset(0)"><br>
-    <canvas width="400" height="400" id="myCanvas"></canvas>
+    <input type="button" value="update" onclick="render()">
+    <input type="button" value="reset" onclick="reset(0)">
+    <input type="button" value="download" onclick="downloadCanvasAsImage('circuitImg.png')"><br>
+    <canvas width="800" height="800" id="myCanvas"></canvas>
     <script defer src="/tileMap_circuit/rules.js"></script>
     <script defer src="/tileMap_cirCuit/main.js"></script>
 </body>
