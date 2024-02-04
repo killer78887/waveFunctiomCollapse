@@ -1,12 +1,15 @@
+const checkBox = document.getElementById("checkbox");
 const totalTileType = tiles.length;
 
+let checkBoxBool = checkBox.checked;
 let wave = Array.from({ length: totalTiles }, () => Array(totalTileType).fill(true));
 let clpWave = new Array(totalTiles).fill(undefined);
 let gridState = new Array(totalTiles).fill(false); //if a grid is drawn on canvas
 
 let resets = 0;
-canvas.addEventListener("touchstart", handleTouchStart, false);
 
+checkBox.addEventListener("change",function(){checkBoxBool=checkBox.checked;render();});
+canvas.addEventListener("touchstart", handleTouchStart, false);
 function handleTouchStart(event) {
     event.preventDefault();
 
@@ -26,6 +29,9 @@ function reset(startOn){
     wave[startOn][Math.floor(Math.random()*totalTileType)] = true;
 }
 function tileReset(tileId){ //reset specific tiles
+    if(tileId>=totalTiles || tileId<0){
+      return 0;
+    }
     wave[tileId] = Array(totalTileType).fill(true,0,totalTileType);
     clpWave[tileId] = undefined;
     gridState[tileId] = false;
@@ -53,9 +59,16 @@ function collapse(){
                 clpWave[i] = temp;
             }
             else if(entropy===0){
-                if(resets<10){
-                    for (var r = 0; r < grid.x*2; r++) {
-                        tileReset(i+(grid.x)-r);
+                if(resets<10000){
+                    const centerY = Math.floor(i/grid.x);
+                    const centerX = i%grid.y;
+                    const radius = (resets%5)+1;
+                    for (let y = Math.max(0, centerY - radius); y <= Math.min(grid.y - 1, centerY + radius); y++) {
+                        for (let x = Math.max(0, centerX - radius); x <= Math.min(grid.x - 1, centerX + radius); x++) {
+                            const index = Math.floor(y) * grid.x + Math.floor(x);
+                            tileReset(index);
+                            //console.log(`Pixel at (${x}, ${y}): ${index}`);
+                        }
                     }
                 }
                 else{
@@ -118,8 +131,6 @@ function eliminate(i){
 ctx.imageSmoothingEnabled = false;
 
 function render(){
-    //console.table(wave);
-    //console.log("running");
     collapse();
     for (var y = 0; y < grid.y; y++) {
         for (var x = 0; x < grid.x; x++) {
@@ -130,6 +141,8 @@ function render(){
             }
         }
     }
-    requestAnimationFrame(render);
+    if(checkBoxBool===true){
+        requestAnimationFrame(render);
+    }
 }
 render();
