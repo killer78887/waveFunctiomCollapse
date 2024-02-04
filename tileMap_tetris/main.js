@@ -1,12 +1,13 @@
 ctx.imageSmoothingEnabled = false;
 
 const totalTileType = tiles.length;
-const grid = { x:10,y:10};
+const grid = { x: 40,y: 40};
 const totalTiles = grid.x*grid.y;
 const tileSize = Math.sqrt(canvas.height*canvas.width/totalTiles);
 
 let wave = Array.from({ length: totalTiles }, () => Array(totalTileType).fill(true));
 let clpWave = new Array(totalTiles).fill(undefined);
+let gridState = new Array(totalTiles).fill(false); //if a grid is drawn on canvas
 
 canvas.addEventListener("touchstart", handleTouchStart, false);
 
@@ -21,10 +22,12 @@ function handleTouchStart(event) {
     reset(onTile);
 }
 function reset(startOn){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     wave = Array.from({ length: totalTiles }, () => Array(totalTileType).fill(true));
     clpWave = new Array(totalTiles).fill(undefined);
-    wave[startOn] = Array(6).fill(false,0,6);
+    wave[startOn] = Array(totalTileType).fill(false,0,totalTileType);
     wave[startOn][Math.floor(Math.random()*totalTileType)] = true;
+    gridState = new Array(totalTiles).fill(false);
 }
 function collapse(){
     let entropy = totalTileType;
@@ -81,30 +84,21 @@ function collapse(){
         }
     }
 }
-wave[15] = Array(6).fill(false,0,6);
+wave[15] = Array(totalTileType).fill(false,0,totalTileType);
 wave[15][3] = true;
 
 function render(){
     //console.table(wave);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
     collapse();
     for (var y = 0; y < grid.y; y++) {
         for (var x = 0; x < grid.x; x++) {
             let onTile = y*grid.x+x;
-            if (clpWave[onTile]===undefined) {
-                ctx.globalAlpha = 1/(totalTileType);
-                for (var a = 0; a < totalTileType; a++) {
-                    if(wave[onTile][a]===true){
-                        ctx.putImageData(tiles[a],x*tileSize,y*tileSize);
-                    }
-                }
-            }
-            else{
-                ctx.globalAlpha = 1;
-                ctx.putImageData(tiles[clpWave[onTile]],x*tileSize,y*tileSize);
+            if (clpWave[onTile]!==undefined & gridState[onTile]===false) {
+                ctx.putImageData(tiles[clpWave[onTile]],x*10,y*10);
+                gridState[onTile] = true;
             }
         }
     }
-    //requestAnimationFrame(render);
+    requestAnimationFrame(render);
 }
 render();
