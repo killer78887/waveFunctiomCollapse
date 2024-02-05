@@ -88,12 +88,15 @@ async function initializeTiles() {
             }
         }
     }
+    const rotatedImageData = await canvImg(imgSrc[4].img, true, 90);
+    tiles.push(rotatedImageData);
+    rules.push(imgSrc[4].side.slice(0))
 }
 
 function draw() {
     for (var i = 0; i < tiles.length; i++) {
         let toDraw = tiles[i];
-        ctx.putImageData(toDraw, i * 20, 30);
+        ctx.putImageData(toDraw, i *10, 30);
         console.log("drawing");
     }
 }
